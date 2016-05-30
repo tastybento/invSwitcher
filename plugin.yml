@@ -1,0 +1,5 @@
+name: InvSwitcher
+main: com.wasteofplastic.invswitcher.InvSwitcher
+version: ${version}
+description: Switches world inventories
+author: tastybento
