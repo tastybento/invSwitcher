@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 tastybento
+ * Copyright (c) 2017 tastybento
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,10 +43,10 @@ public class Store extends PluginDependent {
     private File invFile;
     private static final boolean DEBUG = false;
 
-    public Store(InvSwitcher beaconzPlugin) {
-        super(beaconzPlugin);
+    public Store(InvSwitcher plugin) {
+        super(plugin);
         ymlIndex = new YamlConfiguration();
-        invFile = new File(beaconzPlugin.getDataFolder(),"game_inv.yml");
+        invFile = new File(plugin.getDataFolder(),"game_inv.yml");
         try {
             if (!invFile.exists()) {
                 ymlIndex.save(invFile);
@@ -74,6 +74,7 @@ public class Store extends PluginDependent {
      * @param gameName
      * @return last location of the player in the game or null if there is none
      */
+    @SuppressWarnings("deprecation")
     public Location getInventory(Player player, World world) {
         // Get inventory
         // Do not differentiate between world environments. Only the location is different
@@ -82,8 +83,9 @@ public class Store extends PluginDependent {
         List<?> items = ymlIndex.getList(overworldName + "." + player.getUniqueId().toString() + ".inventory");
         if (items != null) player.getInventory().setContents(items.toArray(new ItemStack[items.size()]));
         double health = ymlIndex.getDouble(overworldName + "." + player.getUniqueId().toString() + ".health", 20D);
-        if (health > 20D) {
-            health = 20D;
+        
+        if (health > player.getMaxHealth()) {
+            health = player.getMaxHealth();
         }
         if (health < 0D) {
             health = 0D;
